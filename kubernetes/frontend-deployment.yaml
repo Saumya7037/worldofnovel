@@ -18,7 +18,7 @@ spec:
       containers:
         - name: frontend
           # GitHub Actions will auto-update this image tag every push
-          image: acrworldofnovelsaumyak2026.azurecr.io/worldofnovel-frontend:latest
+          image: acrworldofnovelsaumyak2026.azurecr.io/worldofnovel-frontend:2403300610144de7d82a31eee1f00559625633f6
           ports:
             - containerPort: 80
           resources:
