@@ -41,3 +41,12 @@ kubeconfig*
 
 # Test coverage
 coverage/
+main.tf
+
+*.md
+
+terraform.tfstate*
+
+.terraform/
+
+.terraform.lock.hcl
