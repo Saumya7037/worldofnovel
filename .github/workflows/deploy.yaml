@@ -9,29 +9,37 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
 
-            - uses: azure/docker-login@v1
+            - name: Log in to Azure Container Registry
+              uses: azure/docker-login@v1
               with:
                   login-server: ${{ secrets.ACR_LOGIN_SERVER }}
                   username: ${{ secrets.ACR_USERNAME }}
                   password: ${{ secrets.ACR_PASSWORD }}
 
-            - name: Build and push backend
+            - name: Build and push backend image
               run: |
                   docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/worldofnovel-backend:${{ github.sha }} ./backend
                   docker push ${{ secrets.ACR_LOGIN_SERVER }}/worldofnovel-backend:${{ github.sha }}
 
-            - name: Build and push frontend
+            - name: Build and push frontend image
               run: |
                   docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/worldofnovel-frontend:${{ github.sha }} ./frontend
                   docker push ${{ secrets.ACR_LOGIN_SERVER }}/worldofnovel-frontend:${{ github.sha }}
 
-            - name: Update Kubernetes Manifests
+            - name: Update Kubernetes image tags in manifests
               run: |
-                  sed -i "s|worldofnovel-backend:.*|worldofnovel-backend:${{ github.sha }}|" kubernetes/deployment.yaml
-                  sed -i "s|worldofnovel-frontend:.*|worldofnovel-frontend:${{ github.sha }}|" kubernetes/deployment.yaml
+                  # Update the backend image tag in the deployment manifest
+                  sed -i "s|acrworldofnovelsaumyak2026.azurecr.io/worldofnovel-backend:.*|acrworldofnovelsaumyak2026.azurecr.io/worldofnovel-backend:${{ github.sha }}|" kubernetes/backend-deployment.yaml
+                  # Update the frontend image tag in the deployment manifest
+                  sed -i "s|acrworldofnovelsaumyak2026.azurecr.io/worldofnovel-frontend:.*|acrworldofnovelsaumyak2026.azurecr.io/worldofnovel-frontend:${{ github.sha }}|" kubernetes/frontend-deployment.yaml
+
+            - name: Commit and push updated manifests for ArgoCD
+              run: |
                   git config user.name "GitHub Action"
                   git config user.email "action@github.com"
-                  git add kubernetes/deployment.yaml
-                  git commit -m "Update image tags to ${{ github.sha }}"
+                  git add kubernetes/backend-deployment.yaml kubernetes/frontend-deployment.yaml
+                  git diff --staged --quiet || git commit -m "ci: Update image tags to ${{ github.sha }}"
                   git push
