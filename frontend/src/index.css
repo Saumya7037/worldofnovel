@@ -1,0 +1,330 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/newsreader';
+@import '@fontsource/lora/400.css';
+@import '@fontsource/lora/500.css';
+@import '@fontsource/lora/600.css';
+@import '@fontsource/lora/400-italic.css';
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --won-canvas: #0d0a08;
+  --won-elevated: #16130f;
+  --won-surface: #1a1511;
+  --won-muted: #241d15;
+  --won-ink: #f0e7d5;
+  --won-ink-soft: #c4b59c;
+  --won-ink-faint: #8a7a60;
+  --won-line: #382c1f;
+  --won-line-soft: #272118;
+  --won-ember: #df7a42;
+  --won-ember-hover: #e58d59;
+  --won-ember-soft: #382115;
+  --won-ember-softer: #241710;
+}
+
+@theme inline {
+  --color-canvas: var(--won-canvas);
+  --color-elevated: var(--won-elevated);
+  --color-surface: var(--won-surface);
+  --color-muted: var(--won-muted);
+  --color-ink: var(--won-ink);
+  --color-ink-soft: var(--won-ink-soft);
+  --color-ink-faint: var(--won-ink-faint);
+  --color-line: var(--won-line);
+  --color-line-soft: var(--won-line-soft);
+  --color-ember: var(--won-ember);
+  --color-ember-hover: var(--won-ember-hover);
+  --color-ember-soft: var(--won-ember-soft);
+  --color-ember-softer: var(--won-ember-softer);
+
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
+  --font-body: 'Lora', Georgia, serif;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--won-canvas);
+  color: var(--won-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+::selection {
+  background-color: var(--won-ember-soft);
+  color: var(--won-ink);
+}
+
+/* Elegant focus rings */
+:focus-visible {
+  outline: 2px solid var(--won-ember);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Slim scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--won-ink-faint) transparent;
+}
+
+/* ---------- TipTap editor content ---------- */
+.tiptap {
+  outline: none;
+}
+
+.tiptap > * + * {
+  margin-top: 0.6rem;
+}
+
+.tiptap p {
+  font-family: var(--font-body);
+  font-size: 1.075rem;
+  line-height: 1.85;
+  color: var(--won-ink);
+}
+
+.tiptap h1 {
+  font-family: var(--font-serif);
+  font-size: 1.9rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 1.4rem 0 0.6rem;
+}
+
+.tiptap h2 {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 1.2rem 0 0.5rem;
+}
+
+.tiptap h3 {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 1rem 0 0.4rem;
+}
+
+.tiptap blockquote {
+  border-left: 3px solid var(--won-ember);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: var(--won-ink-soft);
+  font-style: italic;
+  font-family: var(--font-body);
+}
+
+.tiptap ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+
+.tiptap ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+}
+
+.tiptap li {
+  margin: 0.3rem 0;
+  font-family: var(--font-body);
+  font-size: 1.075rem;
+  line-height: 1.75;
+}
+
+.tiptap a {
+  color: var(--won-ember);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.tiptap hr {
+  border: none;
+  border-top: 1px solid var(--won-line);
+  margin: 1.5rem 0;
+}
+
+.tiptap img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin: 1.25rem auto;
+}
+
+.tiptap img.ProseMirror-selectednode {
+  outline: 3px solid var(--won-ember);
+  outline-offset: 2px;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: var(--won-ink-faint);
+  font-family: var(--font-body);
+  font-style: italic;
+}
+
+/* Text alignment is handled inline via style attributes */
+
+/* ---------- Small helpers ---------- */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.4s ease both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease both;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 1.6s ease-in-out infinite;
+}
+
+.stagger > * {
+  animation: fade-up 0.4s ease both;
+}
+
+.stagger > *:nth-child(1) {
+  animation-delay: 0.02s;
+}
+.stagger > *:nth-child(2) {
+  animation-delay: 0.06s;
+}
+.stagger > *:nth-child(3) {
+  animation-delay: 0.1s;
+}
+.stagger > *:nth-child(4) {
+  animation-delay: 0.14s;
+}
+.stagger > *:nth-child(5) {
+  animation-delay: 0.18s;
+}
+.stagger > *:nth-child(6) {
+  animation-delay: 0.22s;
+}
+
+/* Paper texture for cards */
+.paper-texture {
+  background-image:
+    radial-gradient(circle at 20% 0%, rgba(166, 71, 43, 0.04), transparent 45%),
+    radial-gradient(circle at 90% 100%, rgba(166, 71, 43, 0.03), transparent 40%);
+}
+
+/* Decorative divider ✧ */
+.editorial-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--won-ink-faint);
+}
+.editorial-rule::before,
+.editorial-rule::after {
+  content: '';
+  height: 1px;
+  flex: 1;
+  background: var(--won-line);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--won-muted) 0%,
+    var(--won-elevated) 40%,
+    var(--won-muted) 80%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+}

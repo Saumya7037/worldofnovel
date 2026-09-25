@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: novel_admin
+      POSTGRES_PASSWORD: local_dev_password
+      POSTGRES_DB: worldofnovel_db
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./backend
+    environment:
+      - DATABASE_URL=postgresql://novel_admin:local_dev_password@db:5432/worldofnovel_db
+      - JWT_SECRET=local_dev_secret
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
