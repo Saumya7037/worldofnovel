@@ -1,0 +1,37 @@
+name: Build and Push to Azure
+
+on:
+    push:
+        branches: ["main"]
+
+jobs:
+    build-and-push:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+
+            - uses: azure/docker-login@v1
+              with:
+                  login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+                  username: ${{ secrets.ACR_USERNAME }}
+                  password: ${{ secrets.ACR_PASSWORD }}
+
+            - name: Build and push backend
+              run: |
+                  docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/worldofnovel-backend:${{ github.sha }} ./backend
+                  docker push ${{ secrets.ACR_LOGIN_SERVER }}/worldofnovel-backend:${{ github.sha }}
+
+            - name: Build and push frontend
+              run: |
+                  docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/worldofnovel-frontend:${{ github.sha }} ./frontend
+                  docker push ${{ secrets.ACR_LOGIN_SERVER }}/worldofnovel-frontend:${{ github.sha }}
+
+            - name: Update Kubernetes Manifests
+              run: |
+                  sed -i "s|worldofnovel-backend:.*|worldofnovel-backend:${{ github.sha }}|" kubernetes/deployment.yaml
+                  sed -i "s|worldofnovel-frontend:.*|worldofnovel-frontend:${{ github.sha }}|" kubernetes/deployment.yaml
+                  git config user.name "GitHub Action"
+                  git config user.email "action@github.com"
+                  git add kubernetes/deployment.yaml
+                  git commit -m "Update image tags to ${{ github.sha }}"
+                  git push
